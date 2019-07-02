@@ -1,11 +1,20 @@
+import os
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, Bidirectional
 from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras import regularizers
+from tensorflow.keras.models import load_model
 import tensorflow.keras.utils as ku 
+from tensorflow.keras.callbacks import ModelCheckpoint
 import numpy as np 
+
+weights_file = "weights.best_ir_porcast.hdf5"
+
+print ('Loading Model')
+model = load_model("IR_podcast.h5")
+
+# Load checkpoint if one is found
+if os.path.exists(weights_file):
+        print ("loading ", weights_file)
+        model.load_weights(weights_file)
 
 tokenizer = Tokenizer()
 # All the IR podcast transcripts from https://building.infinite.red/
@@ -35,21 +44,11 @@ input_sequences = np.array(pad_sequences(input_sequences, maxlen=max_sequence_le
 # Each sentence builds to the next word
 predictors, label = input_sequences[:,:-1],input_sequences[:,-1]
 
-label = ku.to_categorical(label, num_classes=total_words)
-
-# Build our model structure
-model = Sequential()
-model.add(Embedding(total_words, 100, input_length=max_sequence_len-1))
-model.add(Bidirectional(LSTM(150, return_sequences = True)))
-model.add(Dropout(0.2))
-model.add(LSTM(100))
-model.add(Dense(total_words/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
-model.add(Dense(total_words, activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-print(model.summary())
+label = ku.to_categorical(label, num_classes=total_words)        
 
 # About 1hr per epoch on single GPU
-history = model.fit(predictors, label, epochs=1, verbose=1)
+history = model.fit(predictors, label, epochs=12, verbose=1, callbacks=[ModelCheckpoint(
+        weights_file, monitor='acc', verbose=1, save_best_only=True, mode='max')])
 
 # Graph the history of the training
 import matplotlib.pyplot as plt
@@ -69,5 +68,7 @@ plt.legend()
 
 plt.show()
 
+
 # Save it for later
+print('Saving Model')
 model.save("IR_podcast.h5")
