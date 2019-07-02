@@ -50,6 +50,11 @@ label = ku.to_categorical(label, num_classes=total_words)
 history = model.fit(predictors, label, epochs=12, verbose=1, callbacks=[ModelCheckpoint(
         weights_file, monitor='acc', verbose=1, save_best_only=True, mode='max')])
 
+# Save it for later
+print('Saving Model')
+model.save("IR_podcast.h5")
+
+
 # Graph the history of the training
 import matplotlib.pyplot as plt
 acc = history.history['acc']
@@ -69,6 +74,3 @@ plt.legend()
 plt.show()
 
 
-# Save it for later
-print('Saving Model')
-model.save("IR_podcast.h5")
