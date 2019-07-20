@@ -39,14 +39,14 @@ label = ku.to_categorical(label, num_classes=total_words)
 
 # Build our model structure
 model = Sequential()
-model.add(Embedding(total_words, 100, input_length=max_sequence_len-1))
+model.add(Embedding(total_words, 150, input_length=max_sequence_len-1))
 model.add(Bidirectional(LSTM(150, return_sequences = True)))
 model.add(Dropout(0.2))
 model.add(LSTM(100))
-model.add(Dense(total_words/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
+model.add(Dense(total_words/4, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
 model.add(Dense(total_words, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
 
 # Save it for later
-model.save("IR_podcast.h5")
+model.save("IR_podcast_v3.h5")

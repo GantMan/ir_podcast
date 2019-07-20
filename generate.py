@@ -3,11 +3,11 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.models import load_model
 import numpy as np 
 
-model = load_model("IR_podcast.h5")
+model = load_model("IR_podcast_v3.h5")
 
 tokenizer = Tokenizer()
-seed_text = "The most important thing about IR is the"
-next_words = 10
+seed_text = "I think Todd is"
+next_words = 50
 
 # Load Podcast vocab
 tokenizer = Tokenizer()
