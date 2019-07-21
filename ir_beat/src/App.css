@@ -3,10 +3,24 @@
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
+  transform: rotate(-12deg);
   height: 100px;
   pointer-events: none;
-  margin-bottom: 100px;
+}
+
+.spinny {
+  animation: App-logo-spin infinite 20s linear;
+}
+
+.shiny {
+  -webkit-animation: rainbow-dance infinite 3s linear;
+  animation: rainbow-dance infinite 3s linear;
+}
+
+.poetryTag {
+  margin-top: -20px;
+  margin-bottom: 45px;
+  margin-left: 80px;
 }
 
 .App-header {
@@ -34,6 +48,11 @@
   font-size: 1em;
   padding: 0.5em;
   margin: 1em;
+  border: 3px solid rgba(0,0,0,0.5);
+}
+
+.inputLine {
+  width: 80%;
 }
 
 @keyframes App-logo-spin {
@@ -42,5 +61,26 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes rainbow-dance {
+  0% {
+    background-color: #fc1d58;
+  }
+  20% {
+    background-color: #f5e256;
+  }
+  40% {
+    background-color: #94b846;
+  }
+  60% {
+    background-color: #75f5db;
+  }
+  80% {
+    background-color: #8378b8;
+  }
+  100% {
+    background-color: #ffffff00;
   }
 }

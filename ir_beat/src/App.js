@@ -26,6 +26,7 @@ const textToSequences = inText => {
 let model
 
 function App() {
+  const [running, setRunning] = useState(false)
   const [poetrySeed, setPoetrySeed] = useState(null)
   const [poetry, setPoetry] = useState(null)
 
@@ -39,9 +40,10 @@ function App() {
   // YES, I KNOW this could be optimized
   // GEEZ MOM!  STAHP!
   const createPoetry = async () => {
+    if (!poetrySeed) return
+    setRunning(true)
     let makePoetry = poetrySeed
     for (let i = 0; i < nextWords; i++) {
-      console.log(i) // count along
       const inputSeq = textToSequences(makePoetry)
       const predictions = await model.predict(inputSeq).data()
       inputSeq.dispose()
@@ -49,22 +51,27 @@ function App() {
       makePoetry += ' ' + index2word[resultIdx - 1]
       setPoetry(makePoetry)
     }
+    setRunning(false)
   }
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <h2 className="poetryTag">Poetry</h2>
+        <p>{running ? 'Nom nom nom, eating GPUs and working' : ''}</p>
         <input
           key="seed"
-          className="form"
+          className="form inputLine"
           placeholder="Start your poem here"
           type="text"
           onBlur={({ target }) => setPoetrySeed(target.value)}
         />
         <button
-          className="form"
-          onClick={() => createPoetry('I once knew a man named Justin')}
+          className={running ? 'form shiny' : 'form' }
+          type="submit"
+          disabled={running}
+          onClick={createPoetry}
         >
           Generate Beat/Slam Poetry
         </button>
