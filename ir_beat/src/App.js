@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import logo from './logo.svg'
 import './App.css'
 import * as tf from '@tensorflow/tfjs'
@@ -28,14 +28,18 @@ let model
 function App() {
   const [running, setRunning] = useState(false)
   const [poetrySeed, setPoetrySeed] = useState(null)
-  const [poetry, setPoetry] = useState(null)
+  const [poetry, setPoetry] = useState('LOADING MODEL...')
 
-  const load = async () => {
-    // this is a Layers Model
-    model = await tf.loadLayersModel('/tfjs_quant_model/model.json')
-  }
 
-  load()
+  useEffect(() => {
+    const load = async () => {
+      // this is a Layers Model
+      model = await tf.loadLayersModel('/tfjs_quant_model/model.json')
+      setPoetry('')
+    }
+  
+    load()
+  }, [])
 
   // YES, I KNOW this could be optimized
   // GEEZ MOM!  STAHP!
